@@ -1,8 +1,7 @@
-from sqlite3 import Cursor, Connection, connect
+from sqlite3 import Connection, Cursor, connect
 
 
 class TransactionRepository:
-
     def __init__(self, database_name: str) -> None:
         self.db_name = database_name
         con: Connection = connect(self.db_name)

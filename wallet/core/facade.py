@@ -7,13 +7,12 @@ from wallet.infra.database.wallet_repository import WalletRepository
 
 @dataclass
 class BitcoinWalletService:
-
     @classmethod
     def create(
-            cls,
-            user_repository: UserRepository,
-            wallet_repository: WalletRepository,
-            transaction_repository: TransactionRepository,
+        cls,
+        user_repository: UserRepository,
+        wallet_repository: WalletRepository,
+        transaction_repository: TransactionRepository,
     ) -> "BitcoinWalletService":
         pass
 
@@ -37,4 +36,3 @@ class BitcoinWalletService:
 
     def get_statistics(self):
         pass
-

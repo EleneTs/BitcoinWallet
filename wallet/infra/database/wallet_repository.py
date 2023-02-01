@@ -1,8 +1,7 @@
-from sqlite3 import Connection, connect, Cursor
+from sqlite3 import Connection, Cursor, connect
 
 
 class WalletRepository:
-
     def __init__(self, database_name: str) -> None:
         self.db_name = database_name
         con: Connection = connect(self.db_name)
