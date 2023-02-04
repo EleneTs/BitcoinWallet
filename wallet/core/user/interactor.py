@@ -1,12 +1,40 @@
-from typing import Protocol
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Protocol, Optional
+import uuid
 
 
 class User(Protocol):
-    def get_id(self):
+
+    def get_api_key(self) -> str:
         pass
 
-    def get_username(self):
+
+@dataclass
+class FetchUserRequest:
+    api_key: str
+
+
+class UserRepository(Protocol):
+    def create_user(self, api_key: str) -> None:
         pass
 
-    def get_api_key(self):
+    def fetch_user(self, user_api_key: str) -> Optional[User]:
         pass
+
+
+@dataclass
+class UserInteractor:
+    user_repository: UserRepository
+
+    def generate_api_key(self):
+        return str(uuid.uuid4().hex)
+
+    def create_user(self) -> str:
+        api_key = self.generate_api_key()
+        self.user_repository.create_user(api_key)
+        return api_key
+
+    def fetch_user(self, request: FetchUserRequest) -> Optional[User]:
+        user = self.user_repository.fetch_user(user_api_key=request.api_key)
+        return user
