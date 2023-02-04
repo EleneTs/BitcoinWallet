@@ -11,6 +11,14 @@ class User(Protocol):
 
 
 @dataclass
+class User(User):
+    api_key: str
+
+    def get_api_key(self) -> str:
+        return self.api_key
+
+
+@dataclass
 class FetchUserRequest:
     api_key: str
 

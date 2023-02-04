@@ -1,17 +1,7 @@
-from dataclasses import dataclass
 from sqlite3 import Connection, Cursor, connect
 from typing import Optional
 
 from wallet.core.user.interactor import UserRepository, User
-
-
-@dataclass
-class User(User):
-    api_key: str
-
-    def get_api_key(self) -> str:
-        return self.api_key
-
 
 # class UserRepositoryDb(UserRepository):
 #     cursor: Cursor
