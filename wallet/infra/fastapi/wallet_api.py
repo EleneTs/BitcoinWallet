@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from http import HTTPStatus
+
+from fastapi import APIRouter, Depends, HTTPException
 
 from wallet.core.facade import BitcoinWalletService
 from wallet.infra.fastapi.dependables import get_core
@@ -12,13 +14,23 @@ def create_user(core: BitcoinWalletService = Depends(get_core)):
 
 
 @wallet_api.post("/wallets")
-def create_wallet(core: BitcoinWalletService = Depends(get_core)):
-    return core.create_wallet()
+def create_wallet(api_key: str, core: BitcoinWalletService = Depends(get_core)):
+    wallet_response = core.create_wallet(api_key)
+    if wallet_response.status_code != HTTPStatus.CREATED:
+        raise HTTPException(
+            status_code=wallet_response.status_code, detail=wallet_response.message
+        )
+    return wallet_response.wallet_info
 
 
-@wallet_api.get("/wallets/{address}")
-def get_wallet(core: BitcoinWalletService = Depends(get_core)):
-    return core.get_wallet()
+@wallet_api.get("/wallets/{address}/")
+def get_wallet(address: str, core: BitcoinWalletService = Depends(get_core)):
+    wallet_response = core.get_wallet(address=address)
+    if wallet_response.status_code != HTTPStatus.OK:
+        raise HTTPException(
+            status_code=wallet_response.status_code, detail=wallet_response.message
+        )
+    return wallet_response.wallet_info
 
 
 @wallet_api.post("/transactions")
