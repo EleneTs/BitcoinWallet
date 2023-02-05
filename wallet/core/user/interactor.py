@@ -1,11 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Protocol, Optional
+
 import uuid
+from dataclasses import dataclass
+from typing import Optional, Protocol
 
 
 class User(Protocol):
-
     def get_api_key(self) -> str:
         pass
 
