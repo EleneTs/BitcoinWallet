@@ -32,7 +32,19 @@ class UserRepositoryDb(UserRepository):
         result = cursor.fetchone()
         con.close()
         if result:
-            api_key = result
-            return User(api_key=api_key)
+            username = result[0]
+            api_key = result[1]
+            return User(username=username, api_key=api_key)
         else:
             return None
+
+    def contains(self, username: str) -> bool:
+        con = connect(self.db_name)
+        cursor = con.cursor()
+        cursor.execute("SELECT * from users WHERE username = ?", (username,))
+        result = cursor.fetchone()
+        con.close()
+        if result:
+            return True
+        else:
+            return False
