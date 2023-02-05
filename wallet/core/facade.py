@@ -31,8 +31,8 @@ class BitcoinWalletService:
             ),
         )
 
-    def create_user(self) -> str:
-        return self.user_interactor.create_user()
+    def create_user(self, username: str) -> str:
+        return self.user_interactor.create_user(username)
 
     def create_wallet(self, api_key: str) -> WalletResponse:
         return self.wallet_interactor.create_wallet(api_key)

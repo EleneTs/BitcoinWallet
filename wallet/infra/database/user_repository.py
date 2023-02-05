@@ -14,13 +14,14 @@ class UserRepositoryDb(UserRepository):
         cursor = con.cursor()
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS users (
+               username TEXT NOT NULL UNIQUE,
                api_key TEXT NOT NULL UNIQUE);"""
         )
 
-    def create_user(self, api_key: str) -> None:
+    def create_user(self, api_key: str, username: str) -> None:
         con = connect(self.db_name)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO users (api_key) VALUES (?)", (api_key,))
+        cursor.execute("INSERT INTO users (username, api_key) VALUES (?,?)", (username, api_key,))
         con.commit()
         con.close()
 

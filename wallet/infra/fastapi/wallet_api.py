@@ -8,9 +8,9 @@ from wallet.infra.fastapi.dependables import get_core
 wallet_api = APIRouter()
 
 
-@wallet_api.post("/users")
-def create_user(core: BitcoinWalletService = Depends(get_core)):
-    return core.create_user()
+@wallet_api.post("/users/{username}/")
+def create_user(username: str, core: BitcoinWalletService = Depends(get_core)):
+    return core.create_user(username)
 
 
 @wallet_api.post("/wallets")
