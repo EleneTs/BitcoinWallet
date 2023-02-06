@@ -2,10 +2,7 @@ from dataclasses import dataclass, field
 from http import HTTPStatus
 from typing import Optional
 
-
-@dataclass
-class CreateWalletRequest:
-    api_key: str
+from wallet.core.user.user import IUser, User
 
 
 @dataclass
@@ -24,6 +21,11 @@ class WalletInfo:
 @dataclass
 class WalletResponse(Response):
     wallet_info: Optional[WalletInfo] = field(default_factory=lambda: WalletInfo())
+
+
+@dataclass
+class WalletOwnerResponse(Response):
+    wallet_owner: Optional[IUser] = field(default_factory=lambda: User(-1, "", ""))
 
 
 @dataclass

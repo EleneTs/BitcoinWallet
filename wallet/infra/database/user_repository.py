@@ -9,9 +9,9 @@ class UserRepositoryDb(UserRepository):
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
-        self.create_users_table()
+        self.__create_users_table__()
 
-    def create_users_table(self):
+    def __create_users_table__(self):
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS users (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,3 +47,14 @@ class UserRepositoryDb(UserRepository):
             return True
         else:
             return False
+
+    def fetch_user_by_id(self, user_id: int) -> Optional[IUser]:
+        self.cursor.execute("SELECT * from users WHERE id = ?", (user_id,))
+        result = self.cursor.fetchone()
+        if result:
+            id = result[0]
+            username = result[1]
+            api_key = result[2]
+            return User(id=id, username=username, api_key=api_key)
+        else:
+            return None

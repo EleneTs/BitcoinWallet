@@ -19,6 +19,9 @@ class UserRepository(Protocol):
     def contains(self, username) -> bool:
         pass
 
+    def fetch_user_by_id(self, user_id: int) -> Optional[IUser]:
+        pass
+
 
 @dataclass
 class UserInteractor:

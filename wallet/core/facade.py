@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
+from wallet.core.transaction.transaction import CreateTransactionRequest, TransactionResponse, TransactionListResponse
+from wallet.core.transaction.transaction_interactor import TransactionInteractor
 from wallet.core.user.user_interactor import (UserInteractor, UserRequest,
-                                              UserResponse)
+                                              UserResponse, UserRepository)
 from wallet.core.utils import Convertor, Generator
-from wallet.core.wallet.wallet import CreateWalletRequest
 from wallet.core.wallet.wallet_interactor import (WalletInteractor,
                                                   WalletResponse)
 from wallet.infra.database.transaction_repository import TransactionRepository
-from wallet.infra.database.user_repository import UserRepositoryDb
 from wallet.infra.database.wallet_repository import WalletRepository
 
 
@@ -15,11 +15,12 @@ from wallet.infra.database.wallet_repository import WalletRepository
 class BitcoinWalletService:
     user_interactor: UserInteractor
     wallet_interactor: WalletInteractor
+    transaction_interactor: TransactionInteractor
 
     @classmethod
     def create(
         cls,
-        user_repository: UserRepositoryDb,
+        user_repository: UserRepository,
         wallet_repository: WalletRepository,
         transaction_repository: TransactionRepository,
         convertor: Convertor,
@@ -35,25 +36,30 @@ class BitcoinWalletService:
                 convertor=convertor,
                 generator=generator,
             ),
+            transaction_interactor=TransactionInteractor(
+                user_repository=user_repository,
+                wallet_repository=wallet_repository,
+                transaction_repository=transaction_repository
+            )
         )
 
     def create_user(self, user_request: UserRequest) -> UserResponse:
         return self.user_interactor.create_user(user_request)
 
-    def create_wallet(self, wallet_request: CreateWalletRequest) -> WalletResponse:
-        return self.wallet_interactor.create_wallet(wallet_request)
+    def create_wallet(self, api_key: str) -> WalletResponse:
+        return self.wallet_interactor.create_wallet(api_key)
 
-    def get_wallet(self, address):
-        return self.wallet_interactor.get_wallet(address)
+    def get_wallet(self, address: str, api_key: str):
+        return self.wallet_interactor.get_wallet(address, api_key)
 
-    def create_transaction(self):
-        pass
+    def create_transaction(self, transaction_request: CreateTransactionRequest) -> TransactionResponse:
+        return self.transaction_interactor.create_transaction(transaction_request)
 
-    def get_all_transactions(self):
-        pass
+    def get_user_transactions(self, api_key: str) -> TransactionListResponse:
+        return self.transaction_interactor.get_user_transactions(api_key)
 
-    def get_transactions(self):
-        pass
+    def get_wallet_transactions(self, address: str, api_key: str):
+        return self.transaction_interactor.get_wallet_transactions(address, api_key)
 
     def get_statistics(self):
         pass
