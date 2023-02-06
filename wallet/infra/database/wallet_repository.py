@@ -27,7 +27,7 @@ class WalletRepository:
     def count_user_wallets(self, user: User) -> int:
         con = connect(self.db_name)
         cursor = con.cursor()
-        cursor.execute("SELECT COUNT(*) FROM wallets WHERE api_key=?", user.api_key)
+        cursor.execute("SELECT COUNT(*) FROM wallets WHERE api_key=?", (user.api_key,))
         result = cursor.fetchone()
         con.close()
         return result[0] if result is not None else 0
@@ -44,7 +44,7 @@ class WalletRepository:
                INSERT INTO wallets (address, balance, api_key)
                VALUES (?,?,?)
            """,
-            (wallet_address, btc_balance, user.api_key[0]),
+            (wallet_address, btc_balance, user.api_key),
         )
         con.commit()
         con.close()
