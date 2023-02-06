@@ -54,7 +54,7 @@ class Response:
 @dataclass
 class TransactionInfo:
     commission_fee: float = 0.0
-    transaction_id: str = ""
+    transaction_id: int = 0
 
 
 @dataclass
