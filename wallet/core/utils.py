@@ -1,6 +1,17 @@
+import uuid
 from typing import Protocol
 
 import requests
+
+
+class Generator(Protocol):
+    def generate_key(self):
+        pass
+
+
+class KeyGenerator:
+    def generate_key(self):
+        return str(uuid.uuid4().hex)
 
 
 class Convertor(Protocol):

@@ -4,6 +4,11 @@ from typing import Optional
 
 
 @dataclass
+class CreateWalletRequest:
+    api_key: str
+
+
+@dataclass
 class Response:
     message: str = ""
     status_code: int = HTTPStatus.OK
