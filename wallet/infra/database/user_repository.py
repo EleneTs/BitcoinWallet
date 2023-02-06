@@ -14,13 +14,14 @@ class UserRepositoryDb(UserRepository):
         cursor = con.cursor()
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS users (
+               username TEXT NOT NULL UNIQUE,
                api_key TEXT NOT NULL UNIQUE);"""
         )
 
-    def create_user(self, api_key: str) -> None:
+    def create_user(self, api_key: str, username: str) -> None:
         con = connect(self.db_name)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO users (api_key) VALUES (?)", (api_key,))
+        cursor.execute("INSERT INTO users (username, api_key) VALUES (?,?)", (username, api_key,))
         con.commit()
         con.close()
 
@@ -31,7 +32,19 @@ class UserRepositoryDb(UserRepository):
         result = cursor.fetchone()
         con.close()
         if result:
-            api_key = result
-            return User(api_key=api_key)
+            username = result[0]
+            api_key = result[1]
+            return User(username=username, api_key=api_key)
         else:
             return None
+
+    def contains(self, username: str) -> bool:
+        con = connect(self.db_name)
+        cursor = con.cursor()
+        cursor.execute("SELECT * from users WHERE username = ?", (username,))
+        result = cursor.fetchone()
+        con.close()
+        if result:
+            return True
+        else:
+            return False

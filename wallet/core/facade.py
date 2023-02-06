@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from wallet.core.user.interactor import UserInteractor
+from wallet.core.user.interactor import UserInteractor, User, FetchUserRequest, UserRequest, UserResponse
 from wallet.core.wallet.wallet_interactor import (WalletInteractor,
                                                   WalletResponse)
 from wallet.infra.btc_usd_conversion import Convertor
@@ -31,8 +31,8 @@ class BitcoinWalletService:
             ),
         )
 
-    def create_user(self) -> str:
-        return self.user_interactor.create_user()
+    def create_user(self, user_request: UserRequest) -> UserResponse:
+        return self.user_interactor.create_user(user_request)
 
     def create_wallet(self, api_key: str) -> WalletResponse:
         return self.wallet_interactor.create_wallet(api_key)
