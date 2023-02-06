@@ -6,7 +6,7 @@ from typing import Optional, Protocol
 from wallet.core.user.user import IUser
 from wallet.core.user.user_interactor import UserRepository
 from wallet.core.utils import Convertor, Generator
-from wallet.core.wallet.wallet import (CreateWalletRequest, FetchWalletRequest,
+from wallet.core.wallet.wallet import (FetchWalletRequest,
                                        WalletInfo, WalletResponse)
 
 MAX_USER_WALLETS = 3
@@ -25,6 +25,15 @@ class WalletRepository(Protocol):
     def fetch_wallet(self, wallet_address: str) -> Optional[FetchWalletRequest]:
         pass
 
+    def fetch_wallet_owner_id(self, wallet_address: str) -> int:
+        pass
+
+    def make_transaction(self, wallet_address: str, amount: float):
+        pass
+
+    def get_user_wallets_address(self, user_id: int) -> list[str]:
+        pass
+
 
 @dataclass
 class WalletInteractor:
@@ -33,9 +42,9 @@ class WalletInteractor:
     convertor: Convertor
     generator: Generator
 
-    def create_wallet(self, request: CreateWalletRequest) -> WalletResponse:
+    def create_wallet(self, api_key: str) -> WalletResponse:
 
-        user = self.user_repository.fetch_user(request.api_key)
+        user = self.user_repository.fetch_user(api_key)
         if not user:
             return WalletResponse(
                 status_code=HTTPStatus.FORBIDDEN, message="Invalid credentials"
@@ -62,7 +71,14 @@ class WalletInteractor:
             ),
         )
 
-    def get_wallet(self, address):
+    def get_wallet(self, address: str, api_key: str):
+        user = self.user_repository.fetch_user(api_key)
+        wallet_owner_id = self.wallet_repository.fetch_wallet_owner_id(address)
+        if user is None or user.get_user_id() != wallet_owner_id:
+            return WalletResponse(
+                status_code=HTTPStatus.FORBIDDEN, message="Invalid credentials"
+            )
+
         wallet_info = self.wallet_repository.fetch_wallet(address)
         if wallet_info is None:
             return WalletResponse(

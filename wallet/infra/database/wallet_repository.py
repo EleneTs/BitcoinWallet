@@ -3,9 +3,10 @@ from typing import Optional
 
 from wallet.core.user.user_interactor import IUser
 from wallet.core.wallet.wallet import FetchWalletRequest
+from wallet.core.wallet.wallet_interactor import WalletRepository
 
 
-class WalletRepository:
+class WalletRepositoryDb(WalletRepository):
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
@@ -29,7 +30,7 @@ class WalletRepository:
         return result[0] if result is not None else 0
 
     def create_wallet(
-        self, wallet_address: str, btc_balance: float, user: IUser
+            self, wallet_address: str, btc_balance: float, user: IUser
     ) -> Optional[FetchWalletRequest]:
 
         self.cursor.execute(
@@ -54,3 +55,32 @@ class WalletRepository:
         if result:
             return FetchWalletRequest(balance=result[2], wallet_address=result[1])
         return None
+
+    def fetch_wallet_owner_id(self, wallet_address: str) -> int:
+        self.cursor.execute(
+            """
+                    SELECT * FROM wallets
+                    WHERE address = ?
+                """,
+            (wallet_address,),
+        )
+        result = self.cursor.fetchone()
+        if result:
+            return int(result[3])
+        return -1
+
+    def make_transaction(self, wallet_address: str, amount: float):
+        current_balance = self.fetch_wallet(wallet_address).balance
+        new_balance = round(current_balance + amount, 5)
+        self.cursor.execute(
+            "UPDATE wallets SET balance = ? WHERE address = ? ", (new_balance, wallet_address)
+        )
+        self.connection.commit()
+
+    def get_user_wallets_address(self, user_id: int) -> list[str]:
+        user_wallets: list[str] = []
+        for (id, address, balance, user_id) in self.cursor.execute(
+                "SELECT * from wallets WHERE user_id = ?", (user_id,)
+        ):
+            user_wallets.append(address)
+        return user_wallets

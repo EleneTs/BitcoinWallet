@@ -3,8 +3,8 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException
 
 from wallet.core.facade import BitcoinWalletService
+from wallet.core.transaction.transaction import CreateTransactionRequest
 from wallet.core.user.user_interactor import UserRequest
-from wallet.core.wallet.wallet import CreateWalletRequest
 from wallet.infra.fastapi.dependables import get_core
 
 wallet_api = APIRouter()
@@ -24,9 +24,9 @@ def create_user(
 
 @wallet_api.post("/wallets")
 def create_wallet(
-    wallet_request: CreateWalletRequest, core: BitcoinWalletService = Depends(get_core)
+    api_key: str, core: BitcoinWalletService = Depends(get_core)
 ):
-    wallet_response = core.create_wallet(wallet_request)
+    wallet_response = core.create_wallet(api_key)
     if wallet_response.status_code != HTTPStatus.CREATED:
         raise HTTPException(
             status_code=wallet_response.status_code, detail=wallet_response.message
@@ -35,8 +35,8 @@ def create_wallet(
 
 
 @wallet_api.get("/wallets/{address}/")
-def get_wallet(address: str, core: BitcoinWalletService = Depends(get_core)):
-    wallet_response = core.get_wallet(address=address)
+def get_wallet(address: str, api_key: str, core: BitcoinWalletService = Depends(get_core)):
+    wallet_response = core.get_wallet(address, api_key)
     if wallet_response.status_code != HTTPStatus.OK:
         raise HTTPException(
             status_code=wallet_response.status_code, detail=wallet_response.message
@@ -45,18 +45,33 @@ def get_wallet(address: str, core: BitcoinWalletService = Depends(get_core)):
 
 
 @wallet_api.post("/transactions")
-def create_transaction(core: BitcoinWalletService = Depends(get_core)):
-    return core.create_transaction()
+def create_transaction(transaction_request: CreateTransactionRequest, core: BitcoinWalletService = Depends(get_core)):
+    response = core.create_transaction(transaction_request)
+    if response.status_code != HTTPStatus.CREATED:
+        raise HTTPException(
+            status_code=response.status_code, detail=response.message
+        )
+    return response.transaction_info
 
 
 @wallet_api.get("/transactions")
-def get_all_transactions(core: BitcoinWalletService = Depends(get_core)):
-    return core.get_all_transactions()
+def get_user_transactions(api_key: str, core: BitcoinWalletService = Depends(get_core)):
+    response = core.get_user_transactions(api_key)
+    if response.status_code != HTTPStatus.OK:
+        raise HTTPException(
+            status_code=response.status_code, detail=response.message
+        )
+    return response.transactions_list
 
 
 @wallet_api.get("/wallets/{address}/transactions")
-def get_transactions(core: BitcoinWalletService = Depends(get_core)):
-    return core.get_transactions()
+def get_wallet_transactions(address: str, api_key: str, core: BitcoinWalletService = Depends(get_core)):
+    response = core.get_wallet_transactions(address, api_key)
+    if response.status_code != HTTPStatus.OK:
+        raise HTTPException(
+            status_code=response.status_code, detail=response.message
+        )
+    return response.transactions_list
 
 
 @wallet_api.get("/statistics")
