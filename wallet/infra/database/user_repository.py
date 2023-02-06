@@ -1,7 +1,8 @@
 from sqlite3 import Connection, Cursor
 from typing import Optional
 
-from wallet.core.user.user_interactor import IUser, UserRepository, User
+from wallet.core.user.user import User
+from wallet.core.user.user_interactor import IUser, UserRepository
 
 
 class UserRepositoryDb(UserRepository):

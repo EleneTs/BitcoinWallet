@@ -9,9 +9,9 @@ class WalletRepository:
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
-        self.create_wallets_table()
+        self.__create_wallets_table__()
 
-    def create_wallets_table(self):
+    def __create_wallets_table__(self):
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS wallets (
                id INTEGER PRIMARY KEY AUTOINCREMENT,

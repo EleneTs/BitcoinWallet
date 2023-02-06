@@ -1,62 +1,12 @@
 from __future__ import annotations
 
-import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Optional, Protocol
 
-
-class IUser(Protocol):
-    def get_user_id(self) -> int:
-        pass
-
-    def get_api_key(self) -> str:
-        pass
-
-    def get_username(self) -> str:
-        pass
-
-
-@dataclass
-class User(IUser):
-    id: int
-    api_key: str
-    username: str
-
-    def get_user_id(self) -> int:
-        return self.id
-
-    def get_api_key(self) -> str:
-        return self.api_key
-
-    def get_username(self) -> str:
-        return self.username
-
-
-@dataclass
-class Response:
-    message: str = ""
-    status_code: int = HTTPStatus.OK
-
-
-@dataclass
-class UserInfo:
-    api_key: str = ""
-
-
-@dataclass
-class UserResponse(Response):
-    user_info: Optional[UserInfo] = field(default_factory=lambda: UserInfo())
-
-
-@dataclass
-class FetchUserRequest:
-    api_key: str
-
-
-@dataclass
-class UserRequest:
-    username: str
+from wallet.core.user.user import (FetchUserRequest, IUser, UserInfo,
+                                   UserRequest, UserResponse)
+from wallet.core.utils import Generator
 
 
 class UserRepository(Protocol):
@@ -73,12 +23,10 @@ class UserRepository(Protocol):
 @dataclass
 class UserInteractor:
     user_repository: UserRepository
-
-    def generate_api_key(self) -> str:
-        return str(uuid.uuid4().hex)
+    generator: Generator
 
     def create_user(self, user_request: UserRequest) -> UserResponse:
-        api_key = self.generate_api_key()
+        api_key = self.generator.generate_key()
         if self.user_repository.fetch_user(api_key) is not None:
             return UserResponse(
                 status_code=HTTPStatus.FORBIDDEN, message="Invalid api key"
