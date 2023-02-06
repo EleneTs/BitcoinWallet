@@ -3,14 +3,16 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException
 
 from wallet.core.facade import BitcoinWalletService
-from wallet.core.user.interactor import UserRequest
+from wallet.core.user.user_interactor import UserRequest
 from wallet.infra.fastapi.dependables import get_core
 
 wallet_api = APIRouter()
 
 
 @wallet_api.post("/users")
-def create_user(user_request: UserRequest, core: BitcoinWalletService = Depends(get_core)):
+def create_user(
+    user_request: UserRequest, core: BitcoinWalletService = Depends(get_core)
+):
     user_response = core.create_user(user_request)
     if user_response.status_code != HTTPStatus.CREATED:
         raise HTTPException(

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from http import HTTPStatus
-from typing import Optional, Protocol
+from typing import Optional
 
 
 @dataclass

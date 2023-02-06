@@ -1,3 +1,5 @@
+from sqlite3 import connect
+
 from fastapi import FastAPI
 
 from wallet.core.facade import BitcoinWalletService
@@ -13,9 +15,12 @@ DB_NAME = "wallet.db"
 def setup() -> FastAPI:
     app = FastAPI()
     app.include_router(wallet_api)
-    user_repository = UserRepositoryDb(DB_NAME)
-    wallet_repository = WalletRepository(DB_NAME)
-    transaction_repository = TransactionRepository(DB_NAME)
+    connection = connect(DB_NAME, check_same_thread=False)
+    cursor = connection.cursor()
+
+    user_repository = UserRepositoryDb(connection=connection, cursor=cursor)
+    wallet_repository = WalletRepository(connection=connection, cursor=cursor)
+    transaction_repository = TransactionRepository(connection=connection, cursor=cursor)
     convertor = CoinApiConvertor()
     app.state.core = BitcoinWalletService.create(
         user_repository=user_repository,
