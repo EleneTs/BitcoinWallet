@@ -4,7 +4,8 @@ from fastapi import FastAPI
 
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.utils import CoinApiConvertor, KeyGenerator
-from wallet.infra.database.transaction_repository import TransactionRepositoryDb
+from wallet.infra.database.transaction_repository import \
+    TransactionRepositoryDb
 from wallet.infra.database.user_repository import UserRepositoryDb
 from wallet.infra.database.wallet_repository import WalletRepositoryDb
 from wallet.infra.fastapi.wallet_api import wallet_api
@@ -20,7 +21,9 @@ def setup() -> FastAPI:
 
     user_repository = UserRepositoryDb(connection=connection, cursor=cursor)
     wallet_repository = WalletRepositoryDb(connection=connection, cursor=cursor)
-    transaction_repository = TransactionRepositoryDb(connection=connection, cursor=cursor)
+    transaction_repository = TransactionRepositoryDb(
+        connection=connection, cursor=cursor
+    )
     convertor = CoinApiConvertor()
     generator = KeyGenerator()
     app.state.core = BitcoinWalletService.create(
