@@ -1,17 +1,14 @@
-from sqlite3 import Connection, Cursor, connect
+from sqlite3 import Connection, Cursor
 
 
 class TransactionRepository:
-    def __init__(self, database_name: str) -> None:
-        self.db_name = database_name
-        con: Connection = connect(self.db_name)
-        cursor: Cursor = con.cursor()
-        self.create_transactions_table(cursor)
-        con.commit()
-        con.close()
+    def __init__(self, cursor: Cursor, connection: Connection) -> None:
+        self.cursor = cursor
+        self.connection = connection
+        self.create_transactions_table()
 
-    def create_transactions_table(self, cursor: Cursor):
-        cursor.execute(
+    def create_transactions_table(self):
+        self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS transactions (
                id INTEGER PRIMARY KEY,
                wallet_from INTEGER NOT NULL,

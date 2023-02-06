@@ -2,7 +2,7 @@ import uuid
 from dataclasses import dataclass
 from http import HTTPStatus
 
-from wallet.core.user.interactor import UserRepository
+from wallet.core.user.user_interactor import UserRepository
 from wallet.core.wallet.wallet import WalletInfo, WalletResponse
 from wallet.infra.btc_usd_conversion import Convertor
 from wallet.infra.database.wallet_repository import WalletRepository

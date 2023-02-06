@@ -6,15 +6,25 @@ from http import HTTPStatus
 from typing import Optional, Protocol
 
 
-class User(Protocol):
+class IUser(Protocol):
+    def get_user_id(self) -> int:
+        pass
+
     def get_api_key(self) -> str:
+        pass
+
+    def get_username(self) -> str:
         pass
 
 
 @dataclass
-class User(User):
+class User(IUser):
+    id: int
     api_key: str
     username: str
+
+    def get_user_id(self) -> int:
+        return self.id
 
     def get_api_key(self) -> str:
         return self.api_key
@@ -53,7 +63,7 @@ class UserRepository(Protocol):
     def create_user(self, api_key: str, username: str) -> None:
         pass
 
-    def fetch_user(self, user_api_key: str) -> Optional[User]:
+    def fetch_user(self, user_api_key: str) -> Optional[IUser]:
         pass
 
     def contains(self, username) -> bool:
@@ -70,16 +80,20 @@ class UserInteractor:
     def create_user(self, user_request: UserRequest) -> UserResponse:
         api_key = self.generate_api_key()
         if self.user_repository.fetch_user(api_key) is not None:
-            return UserResponse(status_code=HTTPStatus.FORBIDDEN, message="Invalid api key")
+            return UserResponse(
+                status_code=HTTPStatus.FORBIDDEN, message="Invalid api key"
+            )
         if self.contains_username(user_request.username):
-            return UserResponse(status_code=HTTPStatus.CONFLICT, message="Username already exists")
+            return UserResponse(
+                status_code=HTTPStatus.CONFLICT, message="Username already exists"
+            )
         self.user_repository.create_user(api_key, user_request.username)
-        return UserResponse(status_code=HTTPStatus.CREATED,
-                            user_info=UserInfo(
-                                api_key
-                            ), )
+        return UserResponse(
+            status_code=HTTPStatus.CREATED,
+            user_info=UserInfo(api_key),
+        )
 
-    def fetch_user(self, request: FetchUserRequest) -> Optional[User]:
+    def fetch_user(self, request: FetchUserRequest) -> Optional[IUser]:
         user = self.user_repository.fetch_user(user_api_key=request.api_key)
         return user
 

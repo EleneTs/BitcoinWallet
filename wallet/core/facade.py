@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
-from wallet.core.user.interactor import UserInteractor, User, FetchUserRequest, UserRequest, UserResponse
-from wallet.core.wallet.wallet_interactor import (WalletInteractor,
-                                                  WalletResponse)
+from wallet.core.user.user_interactor import UserInteractor, UserRequest, UserResponse
+from wallet.core.wallet.wallet_interactor import WalletInteractor, WalletResponse
 from wallet.infra.btc_usd_conversion import Convertor
 from wallet.infra.database.transaction_repository import TransactionRepository
 from wallet.infra.database.user_repository import UserRepositoryDb
