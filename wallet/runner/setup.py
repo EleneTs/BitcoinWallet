@@ -4,8 +4,7 @@ from fastapi import FastAPI
 
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.utils import CoinApiConvertor, KeyGenerator
-from wallet.infra.database.transaction_repository import \
-    TransactionRepositoryDb
+from wallet.infra.database.transaction_repository import TransactionRepositoryDb
 from wallet.infra.database.user_repository import UserRepositoryDb
 from wallet.infra.database.wallet_repository import WalletRepositoryDb
 from wallet.infra.fastapi.wallet_api import wallet_api

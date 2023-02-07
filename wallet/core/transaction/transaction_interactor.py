@@ -2,10 +2,13 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Protocol
 
-from wallet.core.transaction.transaction import (CreateTransactionRequest,
-                                                 ITransaction, TransactionInfo,
-                                                 TransactionListResponse,
-                                                 TransactionResponse)
+from wallet.core.transaction.transaction import (
+    CreateTransactionRequest,
+    ITransaction,
+    TransactionInfo,
+    TransactionListResponse,
+    TransactionResponse,
+)
 from wallet.core.user.user_interactor import UserRepository
 from wallet.core.wallet.wallet import WalletOwnerResponse
 from wallet.core.wallet.wallet_interactor import WalletRepository
@@ -73,7 +76,7 @@ class TransactionInteractor:
 
         return TransactionResponse(
             status_code=HTTPStatus.CREATED,
-            transaction_info=TransactionInfo(commission_fee, str(transaction_id)),
+            transaction_info=TransactionInfo(commission_fee, transaction_id),
         )
 
     def __get_wallet_owner__(self, address: str):
