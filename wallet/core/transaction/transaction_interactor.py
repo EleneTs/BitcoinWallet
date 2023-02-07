@@ -2,13 +2,12 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Protocol
 
-from wallet.core.transaction.transaction import (
-    CreateTransactionRequest,
-    ITransaction,
-    TransactionInfo,
-    TransactionListResponse,
-    TransactionResponse,
-)
+from wallet.core.observer import StatisticsObserver
+from wallet.core.statistics.statistics_interactor import StatisticsRepository
+from wallet.core.transaction.transaction import (CreateTransactionRequest,
+                                                 ITransaction, TransactionInfo,
+                                                 TransactionListResponse,
+                                                 TransactionResponse)
 from wallet.core.user.user_interactor import UserRepository
 from wallet.core.wallet.wallet import WalletOwnerResponse
 from wallet.core.wallet.wallet_interactor import WalletRepository
@@ -31,6 +30,9 @@ class TransactionInteractor:
     user_repository: UserRepository
     wallet_repository: WalletRepository
     transaction_repository: TransactionRepository
+    statistics_repository: StatisticsRepository
+
+    statistics_observer: StatisticsObserver
 
     def create_transaction(self, request: CreateTransactionRequest):
         api_user = self.user_repository.fetch_user(request.api_key)
@@ -52,31 +54,29 @@ class TransactionInteractor:
                     status_code=HTTPStatus.BAD_REQUEST, message="Not enough balance"
                 )
         commission_fee: float = 0.0
+        full_amount: float = request.amount
 
         if (
             wallet_from_user.wallet_owner.get_user_id()
-            == wallet_to_user.wallet_owner.get_user_id()
+            != wallet_to_user.wallet_owner.get_user_id()
         ):
-            # no commission
-            self.wallet_repository.make_transaction(
-                request.wallet_from, -request.amount
-            )
-            self.wallet_repository.make_transaction(request.wallet_to, request.amount)
-        else:
-            # commission
-            # TODO add to statistics
+            # transaction fee applied
             commission_fee = round(request.amount * COMMISSION_FEE, 5)
             full_amount = round(request.amount + commission_fee, 5)
-            self.wallet_repository.make_transaction(request.wallet_from, -full_amount)
-            self.wallet_repository.make_transaction(request.wallet_to, request.amount)
+
+        self.wallet_repository.make_transaction(request.wallet_from, -full_amount)
+        self.wallet_repository.make_transaction(request.wallet_to, request.amount)
 
         transaction_id = self.transaction_repository.create_transaction(
             request.wallet_from, request.wallet_to, request.amount
         )
 
+        self.statistics_observer.update(transaction_fee=commission_fee,
+                                        statistics_repository=self.statistics_repository)
+
         return TransactionResponse(
             status_code=HTTPStatus.CREATED,
-            transaction_info=TransactionInfo(commission_fee, transaction_id),
+            transaction_info=TransactionInfo(commission_fee, str(transaction_id)),
         )
 
     def __get_wallet_owner__(self, address: str):
