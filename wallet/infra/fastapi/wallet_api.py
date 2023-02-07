@@ -74,5 +74,8 @@ def get_wallet_transactions(
 
 
 @wallet_api.get("/statistics")
-def get_statistics(core: BitcoinWalletService = Depends(get_core)):
-    return core.get_statistics()
+def get_statistics(admin_api_key: str, core: BitcoinWalletService = Depends(get_core)):
+    response = core.get_statistics(admin_api_key)
+    if response.status_code != HTTPStatus.OK:
+        raise HTTPException(status_code=response.status_code, detail=response.message)
+    return response.statistics_info
