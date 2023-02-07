@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from http import HTTPStatus
-from typing import Protocol, Optional
+from typing import Optional, Protocol
 
 
 class ITransaction(Protocol):
@@ -59,11 +59,13 @@ class TransactionInfo:
 
 @dataclass
 class TransactionResponse(Response):
-    transaction_info: Optional[TransactionInfo] = field(default_factory=lambda: TransactionInfo())
+    transaction_info: Optional[TransactionInfo] = field(
+        default_factory=lambda: TransactionInfo()
+    )
 
 
 @dataclass
 class TransactionListResponse(Response):
-    transactions_list: Optional[list[ITransaction]] = field(default_factory=lambda: Transaction(0, "", "", 0))
-
-
+    transactions_list: Optional[list[ITransaction]] = field(
+        default_factory=lambda: Transaction(0, "", "", 0)
+    )

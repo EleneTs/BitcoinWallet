@@ -1,7 +1,8 @@
 from sqlite3 import Connection, Cursor
 
 from wallet.core.transaction.transaction import ITransaction, Transaction
-from wallet.core.transaction.transaction_interactor import TransactionRepository
+from wallet.core.transaction.transaction_interactor import \
+    TransactionRepository
 
 
 class TransactionRepositoryDb(TransactionRepository):
@@ -21,7 +22,9 @@ class TransactionRepositoryDb(TransactionRepository):
                FOREIGN KEY (wallet_to) REFERENCES wallets(id));"""
         )
 
-    def create_transaction(self, wallet_from: str, wallet_to: str, amount: float) -> int:
+    def create_transaction(
+        self, wallet_from: str, wallet_to: str, amount: float
+    ) -> int:
         self.cursor.execute(
             "INSERT INTO transactions (wallet_from, wallet_to, amount) VALUES (?,?,?)",
             (
@@ -36,7 +39,8 @@ class TransactionRepositoryDb(TransactionRepository):
     def fetch_transactions(self, wallet_address) -> list[ITransaction]:
         transactions: list[ITransaction] = []
         for (id, wallet_from, wallet_to, amount) in self.cursor.execute(
-                "SELECT * from transactions WHERE wallet_from = ? OR wallet_to = ?", (wallet_address, wallet_address)
+            "SELECT * from transactions WHERE wallet_from = ? OR wallet_to = ?",
+            (wallet_address, wallet_address),
         ):
             transactions.append(Transaction(id, wallet_from, wallet_to, amount))
         return transactions

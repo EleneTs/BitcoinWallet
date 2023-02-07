@@ -30,7 +30,7 @@ class WalletRepositoryDb(WalletRepository):
         return result[0] if result is not None else 0
 
     def create_wallet(
-            self, wallet_address: str, btc_balance: float, user: IUser
+        self, wallet_address: str, btc_balance: float, user: IUser
     ) -> Optional[FetchWalletRequest]:
 
         self.cursor.execute(
@@ -70,17 +70,20 @@ class WalletRepositoryDb(WalletRepository):
         return -1
 
     def make_transaction(self, wallet_address: str, amount: float):
-        current_balance = self.fetch_wallet(wallet_address).balance
-        new_balance = round(current_balance + amount, 5)
-        self.cursor.execute(
-            "UPDATE wallets SET balance = ? WHERE address = ? ", (new_balance, wallet_address)
-        )
-        self.connection.commit()
+        wallet = self.fetch_wallet(wallet_address)
+        if wallet is not None:
+            current_balance = wallet.balance
+            new_balance = round(current_balance + amount, 5)
+            self.cursor.execute(
+                "UPDATE wallets SET balance = ? WHERE address = ? ",
+                (new_balance, wallet_address),
+            )
+            self.connection.commit()
 
     def get_user_wallets_address(self, user_id: int) -> list[str]:
         user_wallets: list[str] = []
         for (id, address, balance, user_id) in self.cursor.execute(
-                "SELECT * from wallets WHERE user_id = ?", (user_id,)
+            "SELECT * from wallets WHERE user_id = ?", (user_id,)
         ):
             user_wallets.append(address)
         return user_wallets

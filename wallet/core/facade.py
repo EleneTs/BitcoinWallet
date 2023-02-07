@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 
-from wallet.core.transaction.transaction import CreateTransactionRequest, TransactionResponse, TransactionListResponse
-from wallet.core.transaction.transaction_interactor import TransactionInteractor
-from wallet.core.user.user_interactor import (UserInteractor, UserRequest,
-                                              UserResponse, UserRepository)
+from wallet.core.transaction.transaction import (CreateTransactionRequest,
+                                                 TransactionListResponse,
+                                                 TransactionResponse)
+from wallet.core.transaction.transaction_interactor import \
+    TransactionInteractor
+from wallet.core.user.user_interactor import (UserInteractor, UserRepository,
+                                              UserRequest, UserResponse)
 from wallet.core.utils import Convertor, Generator
 from wallet.core.wallet.wallet_interactor import (WalletInteractor,
                                                   WalletResponse)
@@ -39,8 +42,8 @@ class BitcoinWalletService:
             transaction_interactor=TransactionInteractor(
                 user_repository=user_repository,
                 wallet_repository=wallet_repository,
-                transaction_repository=transaction_repository
-            )
+                transaction_repository=transaction_repository,
+            ),
         )
 
     def create_user(self, user_request: UserRequest) -> UserResponse:
@@ -52,7 +55,9 @@ class BitcoinWalletService:
     def get_wallet(self, address: str, api_key: str):
         return self.wallet_interactor.get_wallet(address, api_key)
 
-    def create_transaction(self, transaction_request: CreateTransactionRequest) -> TransactionResponse:
+    def create_transaction(
+        self, transaction_request: CreateTransactionRequest
+    ) -> TransactionResponse:
         return self.transaction_interactor.create_transaction(transaction_request)
 
     def get_user_transactions(self, api_key: str) -> TransactionListResponse:
