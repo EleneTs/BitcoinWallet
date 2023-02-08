@@ -5,7 +5,8 @@ from typing import Optional, Protocol
 from wallet.core.user.user import IUser
 from wallet.core.user.user_interactor import UserRepository
 from wallet.core.utils import Convertor, Generator
-from wallet.core.wallet.wallet import FetchWalletRequest, WalletInfo, WalletResponse
+from wallet.core.wallet.wallet import (FetchWalletRequest, WalletInfo,
+                                       WalletResponse)
 
 MAX_USER_WALLETS = 3
 INITIAL_BTC_BALANCE = 1.0
@@ -69,7 +70,7 @@ class WalletInteractor:
             ),
         )
 
-    def get_wallet(self, address: str, api_key: str):
+    def get_wallet(self, address: str, api_key: str) -> WalletResponse:
         user = self.user_repository.fetch_user(api_key)
         wallet_owner_id = self.wallet_repository.fetch_wallet_owner_id(address)
         if user is None or user.get_user_id() != wallet_owner_id:

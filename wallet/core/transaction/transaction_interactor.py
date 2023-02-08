@@ -74,8 +74,10 @@ class TransactionInteractor:
             request.wallet_from, request.wallet_to, request.amount
         )
 
-        self.statistics_observer.update(transaction_fee=commission_fee,
-                                        statistics_repository=self.statistics_repository)
+        self.statistics_observer.update(
+            transaction_fee=commission_fee,
+            statistics_repository=self.statistics_repository,
+        )
 
         return TransactionResponse(
             status_code=HTTPStatus.CREATED,
