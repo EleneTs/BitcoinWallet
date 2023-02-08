@@ -4,8 +4,13 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Optional, Protocol
 
-from wallet.core.user.user import (FetchUserRequest, IUser, UserInfo,
-                                   UserRequest, UserResponse)
+from wallet.core.user.user import (
+    FetchUserRequest,
+    IUser,
+    UserInfo,
+    UserRequest,
+    UserResponse,
+)
 from wallet.core.utils import Generator
 
 
@@ -45,8 +50,11 @@ class UserInteractor:
         )
 
     def fetch_user(self, request: FetchUserRequest) -> Optional[IUser]:
-        user = self.user_repository.fetch_user(user_api_key=request.api_key)
+        user = self.user_repository.fetch_user(request.api_key)
         return user
 
     def contains_username(self, username: str) -> bool:
         return self.user_repository.contains(username)
+
+    def fetch_user_by_id(self, user_id: int) -> Optional[IUser]:
+        return self.user_repository.fetch_user_by_id(user_id)
