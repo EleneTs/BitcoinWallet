@@ -48,11 +48,7 @@ class TransactionInteractor:
                 status_code=HTTPStatus.BAD_REQUEST, message="Invalid credentials"
             )
         wallet_request = self.wallet_repository.fetch_wallet(request.wallet_from)
-        if wallet_request is not None:
-            if request.amount > wallet_request.balance:
-                return TransactionResponse(
-                    status_code=HTTPStatus.BAD_REQUEST, message="Not enough balance"
-                )
+
         commission_fee: float = 0.0
         full_amount: float = request.amount
 
@@ -63,6 +59,12 @@ class TransactionInteractor:
             # transaction fee applied
             commission_fee = round(request.amount * COMMISSION_FEE, 5)
             full_amount = round(request.amount + commission_fee, 5)
+
+        if wallet_request is not None:
+            if full_amount > wallet_request.balance:
+                return TransactionResponse(
+                    status_code=HTTPStatus.BAD_REQUEST, message="Not enough balance"
+                )
 
         self.wallet_repository.make_transaction(request.wallet_from, -full_amount)
         self.wallet_repository.make_transaction(request.wallet_to, request.amount)
@@ -76,7 +78,7 @@ class TransactionInteractor:
 
         return TransactionResponse(
             status_code=HTTPStatus.CREATED,
-            transaction_info=TransactionInfo(commission_fee, str(transaction_id)),
+            transaction_info=TransactionInfo(commission_fee, transaction_id),
         )
 
     def __get_wallet_owner__(self, address: str):
