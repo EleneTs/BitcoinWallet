@@ -1,7 +1,8 @@
 from sqlite3 import Connection, Cursor
 
 from wallet.core.transaction.transaction import ITransaction, Transaction
-from wallet.core.transaction.transaction_interactor import TransactionRepository
+from wallet.core.transaction.transaction_interactor import \
+    TransactionRepository
 
 
 class TransactionRepositoryDb(TransactionRepository):

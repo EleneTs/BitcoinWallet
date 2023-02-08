@@ -1,11 +1,10 @@
-from sqlite3 import Cursor, Connection
+from sqlite3 import Connection, Cursor
 
 from wallet.core.statistics.statistics import StatisticsInfo
 from wallet.core.statistics.statistics_interactor import StatisticsRepository
 
 
 class StatisticsRepositoryDB(StatisticsRepository):
-
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
@@ -43,5 +42,6 @@ class StatisticsRepositoryDB(StatisticsRepository):
     def get_statistics(self) -> StatisticsInfo:
         self.cursor.execute("SELECT * from statistics WHERE id = ?", (1,))
         statistics = self.cursor.fetchone()
-        return StatisticsInfo(platform_profit=statistics[1],
-                              transactions_count=statistics[2])
+        return StatisticsInfo(
+            platform_profit=statistics[1], transactions_count=statistics[2]
+        )

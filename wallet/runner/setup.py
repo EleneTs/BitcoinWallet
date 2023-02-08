@@ -26,9 +26,7 @@ def setup() -> FastAPI:
     transaction_repository = TransactionRepositoryDb(
         connection=connection, cursor=cursor
     )
-    statistics_repository = StatisticsRepositoryDB(
-        connection=connection, cursor=cursor
-    )
+    statistics_repository = StatisticsRepositoryDB(connection=connection, cursor=cursor)
     convertor = CoinApiConvertor()
     generator = KeyGenerator()
     observer = DefaultStatisticsObserver()

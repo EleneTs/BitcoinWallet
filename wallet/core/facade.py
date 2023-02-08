@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 from wallet.core.observer import StatisticsObserver
 from wallet.core.statistics.statistics import StatisticsResponse
-from wallet.core.statistics.statistics_interactor import StatisticsInteractor, StatisticsRepository
+from wallet.core.statistics.statistics_interactor import (StatisticsInteractor,
+                                                          StatisticsRepository)
 from wallet.core.transaction.transaction import (CreateTransactionRequest,
                                                  TransactionListResponse,
                                                  TransactionResponse)
@@ -63,7 +64,7 @@ class BitcoinWalletService:
     def create_wallet(self, api_key: str) -> WalletResponse:
         return self.wallet_interactor.create_wallet(api_key)
 
-    def get_wallet(self, address: str, api_key: str):
+    def get_wallet(self, address: str, api_key: str) -> WalletResponse:
         return self.wallet_interactor.get_wallet(address, api_key)
 
     def create_transaction(

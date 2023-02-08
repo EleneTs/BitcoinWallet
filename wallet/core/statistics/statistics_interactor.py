@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Protocol
 
-from wallet.core.statistics.statistics import StatisticsResponse, StatisticsInfo
+from wallet.core.statistics.statistics import (StatisticsInfo,
+                                               StatisticsResponse)
 
 ADMIN_API_KEY = "1d95d3aa5dcd48189edc62582cc9c288"
 
@@ -26,10 +27,8 @@ class StatisticsInteractor:
         if admin_api_key == ADMIN_API_KEY:
             statistics = self.statistics_repository.get_statistics()
             return StatisticsResponse(
-                status_code=HTTPStatus.OK,
-                statistics_info=statistics
+                status_code=HTTPStatus.OK, statistics_info=statistics
             )
         return StatisticsResponse(
-            status_code=HTTPStatus.FORBIDDEN,
-            message="Admin Api Key not correct"
+            status_code=HTTPStatus.FORBIDDEN, message="Admin Api Key not correct"
         )
