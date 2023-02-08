@@ -43,6 +43,7 @@ class TransactionInteractor:
             or wallet_to_user.status_code != HTTPStatus.OK
             or not api_user
             or api_user.get_user_id() != wallet_from_user.wallet_owner.get_user_id()
+            or request.wallet_from == request.wallet_to
         ):
             return TransactionResponse(
                 status_code=HTTPStatus.BAD_REQUEST, message="Invalid credentials"
