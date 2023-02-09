@@ -102,7 +102,7 @@ def test_transaction_between_different_users(service: BitcoinWalletService) -> N
     assert wallet_1_response.wallet_info is not None
     assert wallet_2_response.wallet_info is not None
     assert wallet_1_response.wallet_info.btc_balance == (1 - full_transaction_amount)
-    assert wallet_1_response.wallet_info.btc_balance == 1.5
+    assert wallet_2_response.wallet_info.btc_balance == 1.5
     assert response.status_code == HTTPStatus.CREATED
     assert response.transaction_info is not None
     assert response.transaction_info.commission_fee == (0.5 * COMMISSION_FEE)
