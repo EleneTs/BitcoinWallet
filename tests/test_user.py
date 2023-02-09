@@ -9,7 +9,7 @@ from wallet.infra.in_memory.user_in_memory import UserInMemoryRepository
 
 
 class TestUser(TestCase):
-    def generate_api_key(self):
+    def generate_api_key(self) -> str:
         return str(uuid.uuid4().hex)
 
     def setUp(self) -> None:

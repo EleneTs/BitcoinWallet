@@ -5,10 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.statistics.statistics import StatisticsInfo
-from wallet.core.transaction.transaction import (
-    CreateTransactionRequest,
-    ITransaction,
-)
+from wallet.core.transaction.transaction import CreateTransactionRequest, ITransaction
 from wallet.core.user.user import UserRequest
 from wallet.infra.fastapi.dependables import get_core
 

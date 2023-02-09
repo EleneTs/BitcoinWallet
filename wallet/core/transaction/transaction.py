@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from http import HTTPStatus
 from typing import Optional, Protocol
@@ -66,6 +68,6 @@ class TransactionResponse(Response):
 
 @dataclass
 class TransactionListResponse(Response):
-    transactions_list: Optional[list[ITransaction]] = field(
-        default_factory=lambda: Transaction(0, "", "", 0)
+    transactions_list: list[ITransaction] = field(
+        default_factory=lambda: [Transaction(0, "", "", 0)]
     )
