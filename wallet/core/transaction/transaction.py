@@ -66,7 +66,6 @@ class TransactionResponse(Response):
 
 @dataclass
 class TransactionListResponse(Response):
-    # TODO one mypy error left here
     transactions_list: Optional[list[ITransaction]] = field(
         default_factory=lambda: Transaction(0, "", "", 0)
     )

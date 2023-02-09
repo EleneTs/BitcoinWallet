@@ -5,12 +5,12 @@ import requests
 
 
 class Generator(Protocol):
-    def generate_key(self):
+    def generate_key(self) -> str:
         pass
 
 
 class KeyGenerator:
-    def generate_key(self):
+    def generate_key(self) -> str:
         return str(uuid.uuid4().hex)
 
 
@@ -27,4 +27,4 @@ class CoinApiConvertor(Convertor):
         headers = {"X-CoinAPI-Key": self.api_key}
         response = requests.get(self.url, headers=headers)
         exchange_rate = response.json()["rate"]
-        return round(exchange_rate * btc_amount, 2)
+        return float(round(exchange_rate * btc_amount, 2))

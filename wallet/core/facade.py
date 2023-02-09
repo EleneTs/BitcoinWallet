@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from wallet.core.observer import StatisticsObserver
 from wallet.core.statistics.statistics import StatisticsResponse
@@ -9,19 +10,16 @@ from wallet.core.statistics.statistics_interactor import (
 from wallet.core.transaction.transaction import (
     CreateTransactionRequest,
     TransactionListResponse,
-    TransactionResponse,
 )
-from wallet.core.transaction.transaction_interactor import TransactionInteractor
-from wallet.core.user.user_interactor import (
-    UserInteractor,
-    UserRepository,
-    UserRequest,
-    UserResponse,
+from wallet.core.transaction.transaction_interactor import (
+    TransactionInteractor,
+    TransactionRepository,
 )
+from wallet.core.user.user import UserRequest, UserResponse
+from wallet.core.user.user_interactor import UserInteractor, UserRepository
 from wallet.core.utils import Convertor, Generator
-from wallet.core.wallet.wallet_interactor import WalletInteractor, WalletResponse
-from wallet.infra.database.transaction_repository import TransactionRepository
-from wallet.infra.database.wallet_repository import WalletRepository
+from wallet.core.wallet.wallet import WalletResponse
+from wallet.core.wallet.wallet_interactor import WalletInteractor, WalletRepository
 
 
 @dataclass
@@ -73,15 +71,15 @@ class BitcoinWalletService:
     def get_wallet(self, address: str, api_key: str) -> WalletResponse:
         return self.wallet_interactor.get_wallet(address, api_key)
 
-    def create_transaction(
-        self, transaction_request: CreateTransactionRequest
-    ) -> TransactionResponse:
+    def create_transaction(self, transaction_request: CreateTransactionRequest) -> Any:
         return self.transaction_interactor.create_transaction(transaction_request)
 
     def get_user_transactions(self, api_key: str) -> TransactionListResponse:
         return self.transaction_interactor.get_user_transactions(api_key)
 
-    def get_wallet_transactions(self, address: str, api_key: str):
+    def get_wallet_transactions(
+        self, address: str, api_key: str
+    ) -> TransactionListResponse:
         return self.transaction_interactor.get_wallet_transactions(address, api_key)
 
     def get_statistics(self, admin_api_key: str) -> StatisticsResponse:

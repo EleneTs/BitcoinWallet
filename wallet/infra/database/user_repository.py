@@ -1,17 +1,17 @@
 from sqlite3 import Connection, Cursor
 from typing import Optional
 
-from wallet.core.user.user import User
-from wallet.core.user.user_interactor import IUser, UserRepository
+from wallet.core.user.user import IUser, User
+from wallet.core.user.user_interactor import UserRepository
 
 
 class UserRepositoryDb(UserRepository):
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
-        self.__create_users_table__()
+        self._create_users_table_()
 
-    def __create_users_table__(self):
+    def _create_users_table_(self) -> None:
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS users (
                id INTEGER PRIMARY KEY AUTOINCREMENT,

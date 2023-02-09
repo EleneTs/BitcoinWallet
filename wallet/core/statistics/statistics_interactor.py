@@ -8,7 +8,7 @@ ADMIN_API_KEY = "1d95d3aa5dcd48189edc62582cc9c288"
 
 
 class StatisticsRepository(Protocol):
-    def add_transaction_profit(self, transaction_fee: float):
+    def add_transaction_profit(self, transaction_fee: float) -> None:
         pass
 
     def get_statistics(self) -> StatisticsInfo:
@@ -19,7 +19,7 @@ class StatisticsRepository(Protocol):
 class StatisticsInteractor:
     statistics_repository: StatisticsRepository
 
-    def add_transaction_profit(self, transaction_fee: float):
+    def add_transaction_profit(self, transaction_fee: float) -> None:
         self.statistics_repository.add_transaction_profit(transaction_fee)
 
     def get_statistics(self, admin_api_key: str) -> StatisticsResponse:

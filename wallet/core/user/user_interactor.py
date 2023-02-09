@@ -21,7 +21,7 @@ class UserRepository(Protocol):
     def fetch_user(self, user_api_key: str) -> Optional[IUser]:
         pass
 
-    def contains(self, username) -> bool:
+    def contains(self, username: str) -> bool:
         pass
 
     def fetch_user_by_id(self, user_id: int) -> Optional[IUser]:

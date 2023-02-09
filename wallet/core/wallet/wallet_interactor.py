@@ -26,7 +26,7 @@ class WalletRepository(Protocol):
     def fetch_wallet_owner_id(self, wallet_address: str) -> int:
         pass
 
-    def make_transaction(self, wallet_address: str, amount: float):
+    def make_transaction(self, wallet_address: str, amount: float) -> None:
         pass
 
     def get_user_wallets_address(self, user_id: int) -> list[str]:

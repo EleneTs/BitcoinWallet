@@ -8,12 +8,12 @@ class StatisticsRepositoryDB(StatisticsRepository):
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
-        self.__create_statistics_table__()
+        self._create_statistics_table_()
 
-    def __create_statistics_table__(self):
+    def _create_statistics_table_(self) -> None:
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS statistics (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             profit NUMBER,
             transactions_count INTEGER);"""
         )
@@ -26,7 +26,7 @@ class StatisticsRepositoryDB(StatisticsRepository):
         )
         self.connection.commit()
 
-    def add_transaction_profit(self, transaction_fee: float):
+    def add_transaction_profit(self, transaction_fee: float) -> None:
         self.cursor.execute("SELECT * from statistics WHERE id = ?", (1,))
         statistics = self.cursor.fetchone()
         current_profit = statistics[1]

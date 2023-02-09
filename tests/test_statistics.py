@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.observer import DefaultStatisticsObserver
 from wallet.core.transaction.transaction import CreateTransactionRequest

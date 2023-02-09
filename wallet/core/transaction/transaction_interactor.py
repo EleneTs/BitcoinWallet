@@ -24,7 +24,7 @@ class TransactionRepository(Protocol):
     ) -> Optional[int]:
         pass
 
-    def fetch_transactions(self, wallet_address) -> list[ITransaction]:
+    def fetch_transactions(self, wallet_address: str) -> list[ITransaction]:
         pass
 
 
@@ -37,12 +37,16 @@ class TransactionInteractor:
 
     statistics_observer: StatisticsObserver
 
-    def create_transaction(self, request: CreateTransactionRequest):
+    def create_transaction(
+        self, request: CreateTransactionRequest
+    ) -> TransactionResponse:
         api_user = self.user_repository.fetch_user(request.api_key)
-        wallet_from_user = self.__get_wallet_owner__(address=request.wallet_from)
-        wallet_to_user = self.__get_wallet_owner__(address=request.wallet_to)
+        wallet_from_user = self._get_wallet_owner_(address=request.wallet_from)
+        wallet_to_user = self._get_wallet_owner_(address=request.wallet_to)
         if (
-            wallet_from_user.status_code != HTTPStatus.OK
+            api_user is None
+            or wallet_from_user.wallet_owner is None
+            or wallet_from_user.status_code != HTTPStatus.OK
             or wallet_to_user.status_code != HTTPStatus.OK
             or not api_user
             or api_user.get_user_id() != wallet_from_user.wallet_owner.get_user_id()
@@ -55,7 +59,10 @@ class TransactionInteractor:
 
         commission_fee: float = 0.0
         full_amount: float = request.amount
-
+        if wallet_from_user.wallet_owner is None or wallet_to_user.wallet_owner is None:
+            return TransactionResponse(
+                status_code=HTTPStatus.BAD_REQUEST, message="Invalid credentials"
+            )
         if (
             wallet_from_user.wallet_owner.get_user_id()
             != wallet_to_user.wallet_owner.get_user_id()
@@ -90,7 +97,7 @@ class TransactionInteractor:
             transaction_info=TransactionInfo(commission_fee, transaction_id),
         )
 
-    def __get_wallet_owner__(self, address: str):
+    def _get_wallet_owner_(self, address: str) -> WalletOwnerResponse:
         wallet_owner_id = self.wallet_repository.fetch_wallet_owner_id(address)
         if wallet_owner_id == -1:
             return WalletOwnerResponse(

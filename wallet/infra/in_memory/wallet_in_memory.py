@@ -8,7 +8,7 @@ from wallet.core.wallet.wallet_interactor import WalletRepository
 
 @dataclass
 class WalletInMemoryRepository(WalletRepository):
-    def __init__(self):
+    def __init__(self) -> None:
         self.wallets = dict()
 
     def count_user_wallets(self, user: IUser) -> int:
@@ -41,10 +41,10 @@ class WalletInMemoryRepository(WalletRepository):
     def fetch_wallet_owner_id(self, wallet_address: str) -> int:
         wallet = self.wallets.get(wallet_address)
         if wallet:
-            return wallet["user_id"]
+            return int(wallet["user_id"])
         return -1
 
-    def make_transaction(self, wallet_address: str, amount: float):
+    def make_transaction(self, wallet_address: str, amount: float) -> None:
         wallet = self.wallets.get(wallet_address)
         if wallet:
             wallet["btc_balance"] += amount

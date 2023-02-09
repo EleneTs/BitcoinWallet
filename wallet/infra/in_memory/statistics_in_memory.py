@@ -1,5 +1,3 @@
-from dataclasses import field
-
 from wallet.core.statistics.statistics import StatisticsInfo
 from wallet.core.statistics.statistics_interactor import StatisticsRepository
 
@@ -7,7 +5,7 @@ from wallet.core.statistics.statistics_interactor import StatisticsRepository
 class StatisticsRepositoryInMemory(StatisticsRepository):
     statistics: StatisticsInfo = StatisticsInfo()
 
-    def add_transaction_profit(self, transaction_fee: float):
+    def add_transaction_profit(self, transaction_fee: float) -> None:
         self.statistics.platform_profit = (
             self.statistics.platform_profit + transaction_fee
         )

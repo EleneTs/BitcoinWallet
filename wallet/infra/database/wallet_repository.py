@@ -1,7 +1,7 @@
 from sqlite3 import Connection, Cursor
-from typing import Optional
+from typing import Any, Optional
 
-from wallet.core.user.user_interactor import IUser
+from wallet.core.user.user import IUser
 from wallet.core.wallet.wallet import FetchWalletRequest
 from wallet.core.wallet.wallet_interactor import WalletRepository
 
@@ -10,9 +10,9 @@ class WalletRepositoryDb(WalletRepository):
     def __init__(self, cursor: Cursor, connection: Connection) -> None:
         self.cursor = cursor
         self.connection = connection
-        self.__create_wallets_table__()
+        self._create_wallets_table_()
 
-    def __create_wallets_table__(self):
+    def _create_wallets_table_(self) -> None:
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS wallets (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +22,7 @@ class WalletRepositoryDb(WalletRepository):
                FOREIGN KEY (user_id) REFERENCES users(id))"""
         )
 
-    def count_user_wallets(self, user: IUser) -> int:
+    def count_user_wallets(self, user: IUser) -> Any:
         self.cursor.execute(
             "SELECT COUNT(*) FROM wallets WHERE user_id=?", (user.get_user_id(),)
         )
@@ -69,7 +69,7 @@ class WalletRepositoryDb(WalletRepository):
             return int(result[3])
         return -1
 
-    def make_transaction(self, wallet_address: str, amount: float):
+    def make_transaction(self, wallet_address: str, amount: float) -> None:
         wallet = self.fetch_wallet(wallet_address)
         if wallet is not None:
             current_balance = wallet.balance
