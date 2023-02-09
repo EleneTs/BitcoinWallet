@@ -5,7 +5,7 @@ from wallet.core.statistics.statistics_interactor import StatisticsRepository
 
 
 class StatisticsRepositoryInMemory(StatisticsRepository):
-    statistics: StatisticsInfo = field(default_factory=StatisticsInfo)
+    statistics: StatisticsInfo = StatisticsInfo()
 
     def add_transaction_profit(self, transaction_fee: float):
         self.statistics.platform_profit = (
