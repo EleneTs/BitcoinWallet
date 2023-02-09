@@ -23,7 +23,7 @@ class TransactionRepositoryInMemory(TransactionRepository):
         self.transactions.append(transaction)
         return transaction_id
 
-    def fetch_transactions(self, wallet_address) -> list[ITransaction]:
+    def fetch_transactions(self, wallet_address: str) -> list[ITransaction]:
         fetched_transactions: list[ITransaction] = []
         for transaction in self.transactions:
             if (
