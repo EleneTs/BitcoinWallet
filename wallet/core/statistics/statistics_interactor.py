@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Protocol
 
-from wallet.core.statistics.statistics import (StatisticsInfo,
-                                               StatisticsResponse)
+from wallet.core.statistics.statistics import StatisticsInfo, StatisticsResponse
 
 ADMIN_API_KEY = "1d95d3aa5dcd48189edc62582cc9c288"
 

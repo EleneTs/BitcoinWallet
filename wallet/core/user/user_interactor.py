@@ -4,8 +4,13 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Optional, Protocol
 
-from wallet.core.user.user import (FetchUserRequest, IUser, UserInfo,
-                                   UserRequest, UserResponse)
+from wallet.core.user.user import (
+    FetchUserRequest,
+    IUser,
+    UserInfo,
+    UserRequest,
+    UserResponse,
+)
 from wallet.core.utils import Generator
 
 

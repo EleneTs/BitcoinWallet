@@ -21,7 +21,7 @@ class WalletInMemoryRepository(WalletRepository):
         )
 
     def create_wallet(
-            self, wallet_address: str, btc_balance: float, user: IUser
+        self, wallet_address: str, btc_balance: float, user: IUser
     ) -> Optional[FetchWalletRequest]:
         self.wallets[wallet_address] = {
             "wallet_address": wallet_address,

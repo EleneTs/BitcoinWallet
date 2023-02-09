@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from wallet.core.transaction.transaction import ITransaction, Transaction
-from wallet.core.transaction.transaction_interactor import \
-    TransactionRepository
+from wallet.core.transaction.transaction_interactor import TransactionRepository
 
 
 @dataclass
@@ -12,7 +11,7 @@ class TransactionRepositoryInMemory(TransactionRepository):
 
     def create_transaction(
         self, wallet_from: str, wallet_to: str, amount: float
-    ) -> int:
+    ) -> Optional[int]:
         transaction_id = len(self.transactions) + 1
         transaction = Transaction(
             wallet_from=wallet_from,
