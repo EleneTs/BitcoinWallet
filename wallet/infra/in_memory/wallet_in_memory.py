@@ -32,12 +32,12 @@ class WalletInMemoryRepository(WalletRepository):
 
     def fetch_wallet(self, wallet_address: str) -> Optional[FetchWalletRequest]:
         fetched_wallet = self.wallets.get(wallet_address)
-        assert fetched_wallet is not None
-        balance = fetched_wallet["btc_balance"]
-        if fetched_wallet:
-            return FetchWalletRequest(
-                balance=float(balance), wallet_address=wallet_address
-            )
+        if fetched_wallet is not None:
+            balance = fetched_wallet["btc_balance"]
+            if fetched_wallet:
+                return FetchWalletRequest(
+                    balance=float(balance), wallet_address=wallet_address
+                )
         return None
 
     def fetch_wallet_owner_id(self, wallet_address: str) -> int:
