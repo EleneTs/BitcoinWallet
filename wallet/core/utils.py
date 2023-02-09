@@ -21,7 +21,7 @@ class Convertor(Protocol):
 
 class CoinApiConvertor(Convertor):
     url: str = "https://rest.coinapi.io/v1/exchangerate/BTC/USD"
-    api_key: str = "95E4F109-1AEF-47A0-95AB-26A45AF590D9"
+    api_key: str = "D26CBBDB-3B7F-45BB-B678-040D62E8C654"
 
     def get_btc_to_usd(self, btc_amount: float) -> float:
         headers = {"X-CoinAPI-Key": self.api_key}
