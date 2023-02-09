@@ -1,8 +1,8 @@
 from sqlite3 import Connection, Cursor
+from typing import Optional
 
 from wallet.core.transaction.transaction import ITransaction, Transaction
-from wallet.core.transaction.transaction_interactor import \
-    TransactionRepository
+from wallet.core.transaction.transaction_interactor import TransactionRepository
 
 
 class TransactionRepositoryDb(TransactionRepository):
@@ -24,7 +24,7 @@ class TransactionRepositoryDb(TransactionRepository):
 
     def create_transaction(
         self, wallet_from: str, wallet_to: str, amount: float
-    ) -> int:
+    ) -> Optional[int]:
         self.cursor.execute(
             "INSERT INTO transactions (wallet_from, wallet_to, amount) VALUES (?,?,?)",
             (

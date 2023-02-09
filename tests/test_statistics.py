@@ -6,10 +6,8 @@ from wallet.core.observer import DefaultStatisticsObserver
 from wallet.core.transaction.transaction import CreateTransactionRequest
 from wallet.core.user.user import UserRequest
 from wallet.core.utils import CoinApiConvertor, KeyGenerator
-from wallet.infra.in_memory.statistics_in_memory import \
-    StatisticsRepositoryInMemory
-from wallet.infra.in_memory.transaction_in_memory import \
-    TransactionRepositoryInMemory
+from wallet.infra.in_memory.statistics_in_memory import StatisticsRepositoryInMemory
+from wallet.infra.in_memory.transaction_in_memory import TransactionRepositoryInMemory
 from wallet.infra.in_memory.user_in_memory import UserInMemoryRepository
 from wallet.infra.in_memory.wallet_in_memory import WalletInMemoryRepository
 

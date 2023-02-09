@@ -1,13 +1,16 @@
 from dataclasses import dataclass
 from http import HTTPStatus
-from typing import Protocol
+from typing import Optional, Protocol
 
 from wallet.core.observer import StatisticsObserver
 from wallet.core.statistics.statistics_interactor import StatisticsRepository
-from wallet.core.transaction.transaction import (CreateTransactionRequest,
-                                                 ITransaction, TransactionInfo,
-                                                 TransactionListResponse,
-                                                 TransactionResponse)
+from wallet.core.transaction.transaction import (
+    CreateTransactionRequest,
+    ITransaction,
+    TransactionInfo,
+    TransactionListResponse,
+    TransactionResponse,
+)
 from wallet.core.user.user_interactor import UserRepository
 from wallet.core.wallet.wallet import WalletOwnerResponse
 from wallet.core.wallet.wallet_interactor import WalletRepository
@@ -18,7 +21,7 @@ COMMISSION_FEE = 0.015
 class TransactionRepository(Protocol):
     def create_transaction(
         self, wallet_from: str, wallet_to: str, amount: float
-    ) -> int:
+    ) -> Optional[int]:
         pass
 
     def fetch_transactions(self, wallet_address) -> list[ITransaction]:
@@ -73,7 +76,10 @@ class TransactionInteractor:
         transaction_id = self.transaction_repository.create_transaction(
             request.wallet_from, request.wallet_to, request.amount
         )
-
+        if transaction_id is None:
+            return TransactionResponse(
+                status_code=HTTPStatus.CONFLICT, message="could not create transaction"
+            )
         self.statistics_observer.update(
             transaction_fee=commission_fee,
             statistics_repository=self.statistics_repository,
