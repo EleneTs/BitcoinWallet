@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.observer import DefaultStatisticsObserver
-from wallet.core.utils import CoinApiConvertor, KeyGenerator
+from wallet.core.utils import BinanceApiConvertor, KeyGenerator
 from wallet.infra.database.statistics_repository import StatisticsRepositoryDB
 from wallet.infra.database.transaction_repository import TransactionRepositoryDb
 from wallet.infra.database.user_repository import UserRepositoryDb
@@ -26,7 +26,7 @@ def setup() -> FastAPI:
         connection=connection, cursor=cursor
     )
     statistics_repository = StatisticsRepositoryDB(connection=connection, cursor=cursor)
-    convertor = CoinApiConvertor()
+    convertor = BinanceApiConvertor()
     generator = KeyGenerator()
     observer = DefaultStatisticsObserver()
     app.state.core = BitcoinWalletService.create(

@@ -5,7 +5,7 @@ import pytest
 from wallet.core.facade import BitcoinWalletService
 from wallet.core.observer import DefaultStatisticsObserver
 from wallet.core.user.user import UserRequest
-from wallet.core.utils import CoinApiConvertor, KeyGenerator
+from wallet.core.utils import BinanceApiConvertor, KeyGenerator
 from wallet.infra.in_memory.statistics_in_memory import StatisticsRepositoryInMemory
 from wallet.infra.in_memory.transaction_in_memory import TransactionRepositoryInMemory
 from wallet.infra.in_memory.user_in_memory import UserInMemoryRepository
@@ -15,7 +15,7 @@ from wallet.infra.in_memory.wallet_in_memory import WalletInMemoryRepository
 @pytest.fixture
 def service() -> BitcoinWalletService:
     wallet_repository = WalletInMemoryRepository()
-    convertor = CoinApiConvertor()
+    convertor = BinanceApiConvertor()
     generator = KeyGenerator()
     observer = DefaultStatisticsObserver()
     transaction_repository = TransactionRepositoryInMemory()
